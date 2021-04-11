@@ -1,30 +1,35 @@
 import ulGallery from './gallery-items.js';
+
+// Создание разметки 
 const body = document.querySelector('body');
 const ulEl = document.createElement('ul');
 ulEl.classList.add('gallery');
 
+const makeGallery = (array) => {
 
-const makeGallery = (gal) => {
-
-    const result = gal.map(el => {
-        console.log(el);
-        const { preview, original, description } = el;
-        return `<li class="gallery__item">
+  const result = array.map(({ preview, original, description }) =>
+    `<li class="gallery__item">
   <a class="gallery__link"
     href=${original}>
-    <img
-      class="gallery__image"
+    <img class="gallery__image"
       src=${preview}
       data-source=${original}
       alt=${description}/>
   </a>
-</li>`});
-    ulEl.innerHTML = result.join('');
-    return ulEl;
+</li>`);
+  ulEl.innerHTML = result.join('');
+  return ulEl;
 };
 
 makeGallery(ulGallery);
-console.log(ulEl);
-console.log(makeGallery(ulGallery));
-console.log(body)
 body.prepend(ulEl);
+
+const photoEl = document.querySelector('.gallery__item');
+//Делигирование 
+function clickOnGallery(event) {
+  if (!event.target.classList.contains('gallery__link')) {
+    return
+  }
+  console.log('фото');
+}
+body.addEventListener('click', clickOnGallery);
