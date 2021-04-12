@@ -1,12 +1,14 @@
 import ulGallery from './gallery-items.js';
 
 // Создание разметки 
-const body = document.querySelector('body');
-const ulEl = document.createElement('ul');
-ulEl.classList.add('gallery');
+const listGalleryEl = document.querySelector('.js-gallery');
+const lightboxButtonEl = document.querySelector('button[data-action="close-lightbox"]');
+const lightboxEl = document.querySelector('.js-lightbox');
+const lightboxImageEl = lightboxEl.querySelector('.lightbox__image');
+const lightboxOverlayEl = lightboxEl.querySelector('.lightbox__overlay')
+
 //makeGallery
 const makeGallery = (array) => {
-
   const result = array.map(({ preview, original, description }) =>
     `<li class="gallery__item">
   <a class="gallery__link"
@@ -17,59 +19,58 @@ const makeGallery = (array) => {
       alt=${description}/>
   </a>
 </li>`);
-  ulEl.innerHTML = result.join('');
-  return ulEl;
+  listGalleryEl.innerHTML = result.join('');
 };
 makeGallery(ulGallery);
 
-//makeModal
-
-  const lightboxEl = document.createElement('div')
-  lightboxEl.classList.add('lightbox');
-
-  const lightboxOverlayEl = document.createElement('div');
-  lightboxOverlayEl.classList.add('lightbox__overlay');
-
-const lightboxContentEl = document.createElement('div');
-lightboxContentEl.classList.add('lightbox__content')
-
-const lightboxImageEl = document.createElement('img');
-lightboxImageEl.classList.add('lightbox__image');
-
-const lightboxButtonEl = document.createElement('button');
-lightboxButtonEl.classList.add('lightbox__button');
-lightboxButtonEl.setAttribute('type', 'button');
-lightboxButtonEl.setAttribute('data-action', 'close-lightbox');
-lightboxContentEl.append(lightboxImageEl);
-lightboxOverlayEl.append(lightboxContentEl);
-lightboxEl.append(lightboxOverlayEl, lightboxButtonEl);
-
-
-body.prepend(ulEl, lightboxEl);
-
-const photoEl = document.querySelector('.gallery__item');
 //Делигирование 
-function clickOnGallery(event) {
+listGalleryEl.addEventListener('click', openGallery);
+
+function openGallery(event) {
   event.preventDefault();
   if (!event.target.classList.contains('gallery__image')) {
-    console.log('мимо');
+    return;
   }
-  //открітие модалки
- lightboxEl.classList.add('is-open');
- lightboxEl.querySelector('.lightbox__image').src = event.target.dataset.source;
- lightboxEl.querySelector('.lightbox__image').alt = event.target.alt;
-console.log(lightboxEl);
-
+  lightboxEl.classList.add('is-open');
+  addAttributeOnLightboxImage(event);
+  return;
 };
-ulEl.addEventListener('click', clickOnGallery);
 
+function addAttributeOnLightboxImage(event) {
+  lightboxEl.querySelector('.lightbox__image').src = event.target.dataset.source;
+  lightboxEl.querySelector('.lightbox__image').alt = event.target.alt;
+  return;
+};
 
 //закрытие модалки 
+lightboxButtonEl.addEventListener('click', closeModal);
 
-function closeBtn () {
-  lightboxEl.classList.remove('is-open');
-  lightboxEl.querySelector('.lightbox__image').removeAttribute('src');
- lightboxEl.querySelector('.lightbox__image').removeAttribute('alt');
+
+function closeModal(event) {
+  if (event.target.nodeName === 'BUTTON' || event.code === 'Escape' || event.target === lightboxOverlayEl) {
+    lightboxEl.classList.remove('is-open');
+    lightboxImageEl.removeAttribute('src');
+    lightboxImageEl.removeAttribute('alt');
+    return;
+  };
+  return;
 };
 
-lightboxButtonEl.addEventListener('click', closeBtn);
+lightboxEl.addEventListener('click', closeModal);
+window.addEventListener('keydown', closeModal);
+
+window.addEventListener('keyup', aaa);
+function aaa(event) {
+  console.log(event.code);
+  if (event.code === 'ArrowRight') {
+    console.log('ArrowRight');
+
+    return;
+  };
+  if (event.code === 'ArrowLeft') {
+    console.log('ArrowLeft');
+
+    return;
+  };
+  return;
+};
