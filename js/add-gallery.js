@@ -39,6 +39,7 @@ lightboxImageEl.classList.add('lightbox__image');
 const lightboxButtonEl = document.createElement('button');
 lightboxButtonEl.classList.add('lightbox__button');
 lightboxButtonEl.setAttribute('type', 'button');
+lightboxButtonEl.setAttribute('data-action', 'close-lightbox');
 lightboxContentEl.appendChild(lightboxImageEl);
 lightboxOverlayEl.append(lightboxContentEl, lightboxButtonEl);
 lightboxEl.appendChild(lightboxOverlayEl);
@@ -50,7 +51,7 @@ const photoEl = document.querySelector('.gallery__item');
 //Делигирование 
 function clickOnGallery(event) {
   event.preventDefault();
-  if (!event.target.classList.contains('gallery__link')) {
+  if (!event.target.classList.contains('gallery__image')) {
     console.log('мимо');
   }
   //открітие модалки
@@ -67,6 +68,8 @@ ulEl.addEventListener('click', clickOnGallery);
 const btnCloseEl = document.querySelector('.lightbox__button');
 function closeBtn () {
   lightboxEl.classList.remove('is-open');
+  lightboxEl.querySelector('.lightbox__image').src = "";
+ lightboxEl.querySelector('.lightbox__image').alt = "";
 };
 
 btnCloseEl.addEventListener('click', closeBtn);
