@@ -40,9 +40,9 @@ const lightboxButtonEl = document.createElement('button');
 lightboxButtonEl.classList.add('lightbox__button');
 lightboxButtonEl.setAttribute('type', 'button');
 lightboxButtonEl.setAttribute('data-action', 'close-lightbox');
-lightboxContentEl.appendChild(lightboxImageEl);
-lightboxOverlayEl.append(lightboxContentEl, lightboxButtonEl);
-lightboxEl.appendChild(lightboxOverlayEl);
+lightboxContentEl.append(lightboxImageEl);
+lightboxOverlayEl.append(lightboxContentEl);
+lightboxEl.append(lightboxOverlayEl, lightboxButtonEl);
 
 
 body.prepend(ulEl, lightboxEl);
@@ -65,11 +65,11 @@ ulEl.addEventListener('click', clickOnGallery);
 
 
 //закрытие модалки 
-const btnCloseEl = document.querySelector('.lightbox__button');
+
 function closeBtn () {
   lightboxEl.classList.remove('is-open');
-  lightboxEl.querySelector('.lightbox__image').src = "";
- lightboxEl.querySelector('.lightbox__image').alt = "";
+  lightboxEl.querySelector('.lightbox__image').removeAttribute('src');
+ lightboxEl.querySelector('.lightbox__image').removeAttribute('alt');
 };
 
-btnCloseEl.addEventListener('click', closeBtn);
+lightboxButtonEl.addEventListener('click', closeBtn);
