@@ -9,6 +9,7 @@ const lightboxImageEl = lightboxEl.querySelector('.lightbox__image');
 const lightboxOverlayEl = lightboxEl.querySelector('.lightbox__overlay');
 
 
+
 //makeGallery
 const makeGallery = (array) => {
   const result = array.map(({ preview, original, description }) =>
@@ -25,6 +26,30 @@ const makeGallery = (array) => {
 };
 makeGallery(ulGallery);
 
+
+//loading = 'lazy';
+const arrImgPreviewEl = listGalleryEl.querySelectorAll('.gallery__image');
+
+
+if ('loading' in HTMLImageElement.prototype) {
+  console.log('ok')
+
+  arrImgPreviewEl.forEach(img => {
+    img.setAttribute('data-src', img.src);
+    img.setAttribute('loading', 'lazy');
+  });
+} else {
+  const scriptEl = document.createElement('script');
+  scriptEl.src = "./js/lazysizes.min.js";
+  scriptEl.async = "";
+  const bodyEl = document.querySelector('body');
+  bodyEl.append(scriptEl);
+  img.classList.add('lazyload');
+}
+
+
+
+
 //Делигирование 
 listGalleryEl.addEventListener('click', openGallery);
 
@@ -35,9 +60,9 @@ lightboxButtonEl.removeEventListener('click', closeModal);
 
 function openGallery(event) {
   listGalleryEl.removeEventListener('click', openGallery);
-lightboxEl.addEventListener('click', closeModal);
-window.addEventListener('keydown', closeModal);
-lightboxButtonEl.addEventListener('click', closeModal);
+  lightboxEl.addEventListener('click', closeModal);
+  window.addEventListener('keydown', closeModal);
+  lightboxButtonEl.addEventListener('click', closeModal);
 
   event.preventDefault();
   if (!event.target.classList.contains('gallery__image')) {
@@ -51,6 +76,7 @@ lightboxButtonEl.addEventListener('click', closeModal);
 function addAttributeOnLightboxImage(event) {
   lightboxImageEl.src = event.target.dataset.source;
   lightboxImageEl.alt = event.target.alt;
+
   return;
 };
 
@@ -59,7 +85,7 @@ function addAttributeOnLightboxImage(event) {
 
 
 function closeModal(event) {
-  
+
   if (event.target.nodeName === 'BUTTON' || event.code === 'Escape' || event.target === lightboxOverlayEl) {
     listGalleryEl.addEventListener('click', openGallery);
     lightboxEl.classList.remove('is-open');
@@ -71,27 +97,36 @@ function closeModal(event) {
 };
 
 
-const arrImgPreview = listGalleryEl.querySelectorAll('.gallery__image');
-console.log(arrImgPreview);
-arrImgPreview.forEach(img => img.addEventListener('load', print));
-function print (event) {
-  console.log('LOAD')
-};
+
+
 /////////////////////////////////////////////////////
 
 
 
-// window.addEventListener('keyup', flickThrough);
-// function flickThrough(event) {
-//   console.log(event.code);
-//   if (event.code === 'ArrowRight') {
-//             console.log('111');
-//     return;
-//   };
-//   if (event.code === 'ArrowLeft') {
-//     console.log('ArrowLeft');
+window.addEventListener('keyup', flickThrough);
+function flickThrough(event) {
+  console.log(event.code);
+  if (event.code === 'ArrowRight') {
+    console.log('111');
 
-//     return;
-//   };
-//   return;
-// };
+    return;
+  };
+  if (event.code === 'ArrowLeft') {
+    console.log('ArrowLeft');
+
+    return;
+  };
+  return;
+};
+
+ulGallery.forEach((el, i) => {
+  // console.log(el.description);
+  // console.log(lightboxImageEl.alt);
+
+  console.log(lightboxImageEl.getAttribute('alt'))
+  // console.log(lightboxImageEl.alt.nodeValue);
+  if (el.description === lightboxImageEl.alt) {
+    console.log('111111111111111111111');
+  }
+  return i;
+});
