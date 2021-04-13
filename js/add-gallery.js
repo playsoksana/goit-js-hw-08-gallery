@@ -8,8 +8,6 @@ const lightboxEl = document.querySelector('.js-lightbox');
 const lightboxImageEl = lightboxEl.querySelector('.lightbox__image');
 const lightboxOverlayEl = lightboxEl.querySelector('.lightbox__overlay');
 
-
-
 //makeGallery
 const makeGallery = (array) => {
   const result = array.map(({ preview, original, description }) =>
@@ -19,20 +17,18 @@ const makeGallery = (array) => {
     <img class="gallery__image"
       src=${preview}
       data-source=${original}
-      alt=${description}/>
+      alt='${description}'/>
   </a>
 </li>`);
   listGalleryEl.innerHTML = result.join('');
 };
 makeGallery(ulGallery);
 
-
 //loading = 'lazy';
 const arrImgPreviewEl = listGalleryEl.querySelectorAll('.gallery__image');
 
 
 if ('loading' in HTMLImageElement.prototype) {
-  console.log('ok')
 
   arrImgPreviewEl.forEach(img => {
     img.setAttribute('data-src', img.src);
@@ -48,8 +44,6 @@ if ('loading' in HTMLImageElement.prototype) {
 }
 
 
-
-
 //Делигирование 
 listGalleryEl.addEventListener('click', openGallery);
 
@@ -57,32 +51,29 @@ lightboxEl.removeEventListener('click', closeModal);
 window.removeEventListener('keydown', closeModal);
 lightboxButtonEl.removeEventListener('click', closeModal);
 
-
 function openGallery(event) {
   listGalleryEl.removeEventListener('click', openGallery);
   lightboxEl.addEventListener('click', closeModal);
   window.addEventListener('keydown', closeModal);
   lightboxButtonEl.addEventListener('click', closeModal);
+  window.addEventListener('keyup', flickThrough);
 
   event.preventDefault();
   if (!event.target.classList.contains('gallery__image')) {
-    return;
   }
   lightboxEl.classList.add('is-open');
   addAttributeOnLightboxImage(event);
-  return;
 };
 
 function addAttributeOnLightboxImage(event) {
   lightboxImageEl.src = event.target.dataset.source;
   lightboxImageEl.alt = event.target.alt;
-
-  return;
 };
 
-//закрытие модалки 
 
 
+
+//closing modal
 
 function closeModal(event) {
 
@@ -91,42 +82,39 @@ function closeModal(event) {
     lightboxEl.classList.remove('is-open');
     lightboxImageEl.removeAttribute('src');
     lightboxImageEl.removeAttribute('alt');
-    return;
+    window.removeEventListener('keyup', flickThrough);
   };
-  return;
 };
 
 
-
-
-/////////////////////////////////////////////////////
-
-
-
-window.addEventListener('keyup', flickThrough);
+//right and left
+let indexCurrentPhoto;
 function flickThrough(event) {
-  console.log(event.code);
+  findIndex();
+
   if (event.code === 'ArrowRight') {
-    console.log('111');
-
-    return;
+    if (indexCurrentPhoto === ulGallery.length - 1) {
+      indexCurrentPhoto = -1;
+    };
+    lightboxImageEl.src = ulGallery[indexCurrentPhoto + 1].original;
+    lightboxImageEl.alt = ulGallery[indexCurrentPhoto + 1].description;
+    return lightboxImageEl;
   };
+
   if (event.code === 'ArrowLeft') {
-    console.log('ArrowLeft');
-
-    return;
+    if (indexCurrentPhoto === 0) {
+      indexCurrentPhoto = ulGallery.length;
+    };
+    lightboxImageEl.src = ulGallery[indexCurrentPhoto - 1].original;
+    lightboxImageEl.alt = ulGallery[indexCurrentPhoto - 1].description;
+    return lightboxImageEl;
   };
-  return;
 };
 
-ulGallery.forEach((el, i) => {
-  // console.log(el.description);
-  // console.log(lightboxImageEl.alt);
-
-  console.log(lightboxImageEl.getAttribute('alt'))
-  // console.log(lightboxImageEl.alt.nodeValue);
-  if (el.description === lightboxImageEl.alt) {
-    console.log('111111111111111111111');
-  }
-  return i;
-});
+function findIndex() {
+  ulGallery.forEach((el, i) => {
+    if (el.description === lightboxImageEl.getAttribute('alt')) {
+      return indexCurrentPhoto = i;
+    }
+  });
+}
