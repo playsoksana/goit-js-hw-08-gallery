@@ -47,10 +47,6 @@ if ('loading' in HTMLImageElement.prototype) {
 //Делигирование 
 listGalleryEl.addEventListener('click', openGallery);
 
-lightboxEl.removeEventListener('click', closeModal);
-window.removeEventListener('keydown', closeModal);
-lightboxButtonEl.removeEventListener('click', closeModal);
-
 function openGallery(event) {
   listGalleryEl.removeEventListener('click', openGallery);
   lightboxEl.addEventListener('click', closeModal);
@@ -79,6 +75,9 @@ function closeModal(event) {
 
   if (event.target.nodeName === 'BUTTON' || event.code === 'Escape' || event.target === lightboxOverlayEl) {
     listGalleryEl.addEventListener('click', openGallery);
+    lightboxEl.removeEventListener('click', closeModal);
+    window.removeEventListener('keydown', closeModal);
+    lightboxButtonEl.removeEventListener('click', closeModal);
     lightboxEl.classList.remove('is-open');
     lightboxImageEl.removeAttribute('src');
     lightboxImageEl.removeAttribute('alt');
